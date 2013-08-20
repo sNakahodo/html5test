@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<div id="container"></div>
+
+<script src="kinetic.js"></script>
+<script>
+//base face 
+var base_face = new Image(); 
+base_face.onload = function() {
+}
+base_face.width = "100";
+base_face.height = "150";
+base_face.src = "base_face.png";
+
+//base neck 
+var base_neck = new Image(); 
+base_neck.onload = function() {
+}
+base_neck.width = "100";
+base_neck.height = "150";
+base_neck.src = "base_neck.png";
+
+//color face 
+var color_face = new Image(); 
+color_face.onload = function() {
+}
+color_face.width = "100";
+color_face.height = "150";
+color_face.src = "color_face.png";
+
+//color neck
+var color_neck = new Image(); 
+color_neck.onload = function() {
+	initStage(base_face, base_neck, color_face, color_neck);
+}
+color_neck.width = "100";
+color_neck.height = "150";
+color_neck.src = "color_neck.png";
+
+function initStage(base_face, base_neck, color_face, color_neck) {
+	var stage = new Kinetic.Stage({
+		container: "container",
+		width: 578,
+		height: 200
+	});
+
+	var baseLayer = new Kinetic.Layer();
+	var baseFaceLayer = new Kinetic.Layer();
+	var baseFaceImage = new Kinetic.Image({
+		image: base_face,
+		x: 0,
+		y: 0
+	});
+
+	var colorFaceLayer = new Kinetic.Layer();
+	var colorFaceImage = new Kinetic.Image({
+		image: color_face,
+		x: 0,
+		y: 0
+	});
+
+	var baseNeckLayer = new Kinetic.Layer();
+	var baseNeckImage = new Kinetic.Image({
+		image: base_neck,
+		x: 0,
+		y: 0
+	});
+
+	var colorNeckLayer = new Kinetic.Layer();
+	var colorNeckImage = new Kinetic.Image({
+		image: color_neck,
+		x: 0,
+		y: 0
+	});
+
+	baseFaceImage.on("click", function(e){
+		baseLayer.add(colorFaceImage);
+		stage.add(baseLayer);
+	});	
+
+	colorFaceImage.on("click", function(e){
+		this.remove();
+		stage.add(baseLayer);
+		//colorFaceLayer.remove();
+	});	
+
+	baseNeckImage.on("click", function(e){
+		baseLayer.add(colorNeckImage);
+		stage.add(baseLayer);
+	});	
+
+	colorNeckImage.on("click", function(e){
+		this.remove();
+		stage.add(baseLayer);
+		//colorNeckLayer.remove();
+	});	
+
+	baseLayer.draw();
+	baseLayer.add(baseNeckImage);
+	baseLayer.add(baseFaceImage);
+	stage.add(baseLayer);
+}
+
+</script>
+
+</body>
+</html>
