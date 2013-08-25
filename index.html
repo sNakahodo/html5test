@@ -6,101 +6,90 @@
 
 <script src="kinetic.js"></script>
 <script>
-//base face 
-var base_face = new Image(); 
-base_face.onload = function() {
-}
-base_face.width = "100";
-base_face.height = "150";
-base_face.src = "base_face.png";
+var images = [
+	{ part:"face",  w:"70", h:"100", x:0, y:0 }
+]
 
-//base neck 
-var base_neck = new Image(); 
-base_neck.onload = function() {
-}
-base_neck.width = "100";
-base_neck.height = "150";
-base_neck.src = "base_neck.png";
+var versions = ["base", "hover", "color"];
+var imageObjs = {};
 
-//color face 
-var color_face = new Image(); 
-color_face.onload = function() {
-}
-color_face.width = "100";
-color_face.height = "150";
-color_face.src = "color_face.png";
+for (var i = 0; i < images.length; i++) {
 
-//color neck
-var color_neck = new Image(); 
-color_neck.onload = function() {
-	initStage(base_face, base_neck, color_face, color_neck);
-}
-color_neck.width = "100";
-color_neck.height = "150";
-color_neck.src = "color_neck.png";
+	imageObjs[images[i].part] = {};
 
-function initStage(base_face, base_neck, color_face, color_neck) {
+	for (var j = 0; j < versions.length; j++) {
+
+		var img = new Image();
+		imageObjs[images[i].part][versions[j]] = img;
+
+		if (i == (images.length - 1) && j == (versions.length - 1)) {
+			img.onload = function() {
+				console.log(imageObjs);
+				initStage(images);
+			}
+		}
+
+		img.width = images[i].w;
+		img.height = images[i].h;
+		img.src = versions[j]+"_"+images[i].part+".png";
+	}
+
+}
+
+function initStage(images) {
 	var stage = new Kinetic.Stage({
 		container: "container",
 		width: 578,
 		height: 200
 	});
 
-	var baseLayer = new Kinetic.Layer();
-	var baseFaceLayer = new Kinetic.Layer();
-	var baseFaceImage = new Kinetic.Image({
-		image: base_face,
-		x: 0,
-		y: 0
-	});
+	var layer = new Kinetic.Layer();
 
-	var colorFaceLayer = new Kinetic.Layer();
-	var colorFaceImage = new Kinetic.Image({
-		image: color_face,
-		x: 0,
-		y: 0
-	});
+	for (var i = 0; i < images.length; i++) {
+		var baseImage = new Kinetic.Image({
+			image: imageObjs[images[i].part]["base"],
+			x: images[i].x,
+			y: images[i].y
+		});
 
-	var baseNeckLayer = new Kinetic.Layer();
-	var baseNeckImage = new Kinetic.Image({
-		image: base_neck,
-		x: 0,
-		y: 0
-	});
+		var hoverImage = new Kinetic.Image({
+			image: imageObjs[images[i].part]["hover"],
+			x: images[i].x,
+			y: images[i].y
+		});
 
-	var colorNeckLayer = new Kinetic.Layer();
-	var colorNeckImage = new Kinetic.Image({
-		image: color_neck,
-		x: 0,
-		y: 0
-	});
+		var colorImage = new Kinetic.Image({
+			image: imageObjs[images[i].part]["color"],
+			x: images[i].x,
+			y: images[i].y
+		});
 
-	baseFaceImage.on("click", function(e){
-		baseLayer.add(colorFaceImage);
-		stage.add(baseLayer);
-	});	
+		colorImage.on("click", function(e){
+			this.remove();
+			stage.add(layer);
+		});	
 
-	colorFaceImage.on("click", function(e){
-		this.remove();
-		stage.add(baseLayer);
-		//colorFaceLayer.remove();
-	});	
+		hoverImage.on("click", function(e){
+			layer.add(colorImage);
+			stage.add(layer);
+		});
 
-	baseNeckImage.on("click", function(e){
-		baseLayer.add(colorNeckImage);
-		stage.add(baseLayer);
-	});	
+		hoverImage.on("mouseout", function(e){
+			this.remove();
+			stage.add(layer);
+		});	
 
-	colorNeckImage.on("click", function(e){
-		this.remove();
-		stage.add(baseLayer);
-		//colorNeckLayer.remove();
-	});	
+		baseImage.on("mouseover", function(e){
+			layer.add(hoverImage);
+			stage.add(layer);
+		});
 
-	baseLayer.draw();
-	baseLayer.add(baseNeckImage);
-	baseLayer.add(baseFaceImage);
-	stage.add(baseLayer);
+	}
+
+	layer.draw();
+	layer.add(baseImage);
+	stage.add(layer);
+
 }
 
 </script>
