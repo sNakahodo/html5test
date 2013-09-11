@@ -52,6 +52,12 @@ function initStage(images) {
 			y: images[i].y
 		});
 
+		var baseImage = new Kinetic.Image({
+			image: imageObjs[images[i].part]["base"],
+			x: images[i].x,
+			y: images[i].y
+		});
+
 		var hoverImage = new Kinetic.Image({
 			image: imageObjs[images[i].part]["hover"],
 			x: images[i].x,
@@ -65,6 +71,11 @@ function initStage(images) {
 		});
 
 		colorImage.on("click", function(e){
+			this.remove();
+			stage.add(layer);
+		});	
+
+		colorImage.on("touchend", function(e){
 			this.remove();
 			stage.add(layer);
 		});	
@@ -83,6 +94,13 @@ function initStage(images) {
 			layer.add(hoverImage);
 			stage.add(layer);
 		});
+
+		baseImage.on("touchend", function(e){
+			layer.add(colorImage);
+			stage.add(layer);
+		});
+
+
 
 	}
 
